@@ -7,15 +7,17 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
-@app.route('/style.css')
+# Route for serving CSS file
+@app.route('/static/style.css')
 def serve_css():
-    return send_from_directory('.', 'style.css')  # Adjust path if needed
+    return send_from_directory('static', 'style.css')
 
-@app.route('/script.js')
+# Route for serving JS file
+@app.route('/static/script.js')
 def serve_js():
-    return send_from_directory('.', 'script.js')
+    return send_from_directory('static', 'script.js')
 
 # Load the trained model and vectorizer
 model = joblib.load('model.pkl')
