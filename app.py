@@ -1,44 +1,37 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory
-import os
-import joblib
-import numpy as np
+import pickle
+from flask import Flask, render_template, request, jsonify
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.svm import SVC  # Support Vector Classifier
+from sklearn.metrics import accuracy_score
 
 app = Flask(__name__)
 
+# Load the pre-trained model and vectorizer
+with open('model.pkl', 'rb') as model_file:
+    model = pickle.load(model_file)
+
+with open('vectorizer.pkl', 'rb') as vectorizer_file:
+    vectorizer = pickle.load(vectorizer_file)
+
 @app.route('/')
 def home():
-    return app.send_static_file('index.html')
-
-# Route for serving CSS file
-@app.route('/static/style.css')
-def serve_css():
-    return send_from_directory('static', 'style.css')
-
-# Route for serving JS file
-@app.route('/static/script.js')
-def serve_js():
-    return send_from_directory('static', 'script.js')
-
-# Load the trained model and vectorizer
-model = joblib.load('model.pkl')
-vectorizer = joblib.load('vectorizer.pkl')
-
+    return render_template('index.html')  # Render index.html from templates folder
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()  # Get the JSON data
-    text = data['posts']  # Assuming input is passed under the key 'posts'
-    print(f"Received Text: {text}")  # Debugging line to check input
-
+    # Get the text from the form in index.html
+    posts = request.form['posts']  # assuming 'posts' is the name attribute in the form
+    
     # Vectorize the input text
-    text_vect = vectorizer.transform([text])
-
-    # Predict the personality type
-    prediction = model.predict(text_vect)
-    print(f"Prediction: {prediction[0]}")  # Debugging line to check output
-
-    return jsonify({'prediction': prediction[0]})  # Return the predicted type
-
+    input_vector = vectorizer.transform([posts])
+    
+    # Make the prediction
+    prediction = model.predict(input_vector)
+    
+    # Return the result as a JSON response or render it in HTML
+    return jsonify({'prediction': prediction[0]})  # For JSON response
 
 if __name__ == '__main__':
     app.run(debug=True)
