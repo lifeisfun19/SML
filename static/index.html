@@ -4,23 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personality Prediction</title>
-    <!-- Inside index.html -->
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>MBTI Personality Prediction</h1>
-        <form id="prediction-form">
-            <textarea id="posts" rows="4" placeholder="Enter your social media post..."></textarea>
-            <button type="submit">Predict Personality</button>
-        </form>
-        <div id="prediction-result" class="result">
-            <p id="result-text"></p>
-        </div>
+    <h1>Predict Personality Type</h1>
+    <form action="/predict" method="POST">
+        <textarea name="posts" rows="4" cols="50" placeholder="Enter social media post here..."></textarea><br><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    <!-- Display result -->
+    <div id="result">
+        {% if prediction %}
+            <h2>Predicted Personality: {{ prediction }}</h2>
+        {% endif %}
     </div>
-    
- 
 </body>
 </html>
