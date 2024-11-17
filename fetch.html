@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration</title>
+</head>
+<body>
+    <h1>Frontend to Backend Communication</h1>
+    <button id="sendRequest">Send Request</button>
+
+    <script>
+        // Select the button from the DOM
+        const sendRequestButton = document.getElementById('sendRequest');
+
+        // Add event listener to handle button click
+        sendRequestButton.addEventListener('click', function() {
+            // Use fetch to send a POST request to Flask API
+            fetch('http://127.0.0.1:5000/api/some-function', {
+                method: 'POST', // Specify the HTTP method
+                headers: {
+                    'Content-Type': 'application/json', // Inform Flask that you're sending JSON data
+                },
+                body: JSON.stringify({
+                    key: 'value' // Replace with your actual data
+                }) // Send data in JSON format
+            })
+            .then(response => response.json()) // Parse the JSON response from Flask
+            .then(data => {
+                console.log('Success:', data); // Log the response data to the console
+                // You can update the DOM with the response data here
+            })
+            .catch(error => {
+                console.error('Error:', error); // Handle any errors
+            });
+        });
+    </script>
+</body>
+</html>
