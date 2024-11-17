@@ -1,20 +1,20 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 import joblib
-import numpy as np
 
 app = Flask(__name__)
 
+# Route to serve the index.html
 @app.route('/')
 def home():
-    return app.send_static_file('index.html')
+    return send_from_directory('static', 'index.html')
 
-# Route for serving CSS file
+# Route for serving the CSS file
 @app.route('/static/style.css')
 def serve_css():
     return send_from_directory('static', 'style.css')
 
-# Route for serving JS file
+# Route for serving the JS file
 @app.route('/static/script.js')
 def serve_js():
     return send_from_directory('static', 'script.js')
@@ -22,7 +22,6 @@ def serve_js():
 # Load the trained model and vectorizer
 model = joblib.load('model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
-
 
 # Prediction route for the model
 @app.route('/predict', methods=['POST'])
