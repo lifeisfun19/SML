@@ -24,19 +24,21 @@ model = joblib.load('model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 
 
-# Prediction route for the model
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()  # Get the JSON data
     text = data['posts']  # Assuming input is passed under the key 'posts'
-    
+    print(f"Received Text: {text}")  # Debugging line to check input
+
     # Vectorize the input text
     text_vect = vectorizer.transform([text])
-    
+
     # Predict the personality type
     prediction = model.predict(text_vect)
-    
+    print(f"Prediction: {prediction[0]}")  # Debugging line to check output
+
     return jsonify({'prediction': prediction[0]})  # Return the predicted type
+
 
 if __name__ == '__main__':
     app.run(debug=True)
