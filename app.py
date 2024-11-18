@@ -17,7 +17,8 @@ with open('vectorizer.pkl', 'rb') as vectorizer_file:
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Render index.html from templates folder
+    # Serve the index.html from the static folder
+    return send_from_directory('static', 'index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
