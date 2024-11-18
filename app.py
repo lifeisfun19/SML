@@ -8,11 +8,17 @@ from sklearn.metrics import accuracy_score
 
 app = Flask(__name__)
 
+import os  # Add this import for handling paths
+
+# Specify the absolute path to the files
+model_path = r"C:\Users\LENOVO\my_project\model.pkl"
+vectorizer_path = r"C:\Users\LENOVO\my_project\vectorizer.pkl"
+
 # Load the pre-trained model and vectorizer
-with open('model.pkl', 'rb') as model_file:
+with open(model_path, 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('vectorizer.pkl', 'rb') as vectorizer_file:
+with open(vectorizer_path, 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
 
 @app.route('/')
