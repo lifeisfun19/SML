@@ -11,8 +11,8 @@ app = Flask(__name__)
 import os  # Add this import for handling paths
 
 # Specify the absolute path to the files
-model_path = r"C:\Users\LENOVO\my_project\model.pkl"
-vectorizer_path = r"C:\Users\LENOVO\my_project\vectorizer.pkl"
+model_path = r"C:\\Users\\LENOVO\\my_project\\model.pkl"
+vectorizer_path = r"C:\\Users\\LENOVO\\my_project\\vectorizer.pkl"
 
 # Load the pre-trained model and vectorizer
 with open(model_path, 'rb') as model_file:
