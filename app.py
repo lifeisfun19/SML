@@ -22,17 +22,14 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the text from the form in index.html
-    posts = request.form['posts']  # assuming 'posts' is the name attribute in the form
-    
-    # Vectorize the input text
-    input_vector = vectorizer.transform([posts])
-    
-    # Make the prediction
-    prediction = model.predict(input_vector)
-    
-    # Return the result as a JSON response or render it in HTML
-    return jsonify({'prediction': prediction[0]})  # For JSON response
+    try:
+        data = request.json  # Receive JSON data
+        posts = data.get('posts', '')
+        input_vector = vectorizer.transform([posts])
+        prediction = model.predict(input_vector)
+        return jsonify({'prediction': prediction[0]})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
