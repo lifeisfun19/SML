@@ -11,8 +11,8 @@ app = Flask(__name__)
 import os  # Add this import for handling paths
 
 # Specify the absolute path to the files
-model_path = r"C:\Users\LENOVO\my_project\model.pkl"
-vectorizer_path = r"C:\Users\LENOVO\Desktop\vectorizer.pkl"
+model_path = r"model.pkl"
+vectorizer_path = "vectorizer.pkl"
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 model_path = os.path.join(base_dir, "model.pkl")
