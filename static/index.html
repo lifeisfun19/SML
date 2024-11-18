@@ -4,26 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personality Prediction</title>
-    <link href="styles.css" rel="stylesheet"/>
-    <script src="script.js"></script>
+    <link href="styles.css" rel="stylesheet" />
+    <script>
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent form from reloading the page
+
+            const posts = document.getElementById('posts').value;
+            const resultDiv = document.getElementById('prediction-result');
+            const resultText = document.getElementById('result-text');
+
+            if (!posts) {
+                resultDiv.style.display = 'block';
+                resultText.textContent = 'Please enter a post to analyze!';
+                return;
+            }
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ posts: posts })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.style.display = 'block';
+                    resultText.textContent = `Predicted Personality: ${data.prediction}`;
+                } else {
+                    resultDiv.style.display = 'block';
+                    resultText.textContent = 'Error: Unable to get prediction!';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.style.display = 'block';
+                resultText.textContent = 'An unexpected error occurred.';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('prediction-form').addEventListener('submit', submitForm);
+        });
+    </script>
 </head>
 <body>
     <h1>Predict Personality Type</h1>
-   <form id="prediction-form">
-    <textarea id="posts" rows="4" cols="50" placeholder="Enter social media post here..."></textarea><br><br>
-    <button type="submit">Predict</button>
-</form>
-<div id="prediction-result" style="display: none;">
-    <p id="result-text"></p>
-</div>
-
+    <form id="prediction-form">
+        <textarea id="posts" rows="4" cols="50" placeholder="Enter social media post here..."></textarea><br><br>
+        <button type="submit">Predict</button>
     </form>
 
-    <!-- Display result -->
-    <div id="result">
-        {% if prediction %}
-            <h2>Predicted Personality: {{ prediction }}</h2>
-        {% endif %}
+    <div id="prediction-result" style="display: none;">
+        <p id="result-text"></p>
     </div>
 </body>
 </html>
