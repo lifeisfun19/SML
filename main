@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 # Step 1: Load your dataset (replace with your dataset)
 # For this example, assuming you have a CSV file with 'type' as labels and 'posts' as features.
-df = pd.read_csv("C:\\Users\\LENOVO\\my_project\\backend\\dataset\\mbti_1.csv")
+df = pd.read_csv("C:\\Users\\LENOVO\\Desktop\\mbti_1.csv"")
 
 # Step 2: Preprocess your data
 X = df['posts']  # Features (social media posts)
