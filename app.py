@@ -11,12 +11,12 @@ app = Flask(__name__)
 import os  # Add this import for handling paths
 
 # Specify the absolute path to the files
-model_path = r"C:\\Users\\LENOVO\\my_project\\model.pkl"
-vectorizer_path = r"C:\\Users\\LENOVO\\my_project\\vectorizer.pkl"
+model_path = r"C:\Users\LENOVO\my_project\model.pkl"
+vectorizer_path = r"C:\Users\LENOVO\my_project\vectorizer.pkl"
 
-# Load the pre-trained model and vectorizer
-with open(model_path, 'rb') as model_file:
-    model = pickle.load(model_file)
+base_dir = os.path.abspath(os.path.dirname(__file__))
+model_path = os.path.join(base_dir, "model.pkl")
+
 
 with open(vectorizer_path, 'rb') as vectorizer_file:
     vectorizer = pickle.load(vectorizer_file)
