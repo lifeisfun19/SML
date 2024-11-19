@@ -21,8 +21,8 @@ except Exception as e:
 
 @app.route('/')
 def home():
-    """Serve the homepage."""
-    return send_from_directory('static', 'index.html')
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'index.html')
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
