@@ -4,7 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personality Prediction</title>
-    <<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #83a4d4, #b6fbff);
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin: 20px 0;
+            color: #222;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #prediction-result {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .collapsible-header {
+            font-weight: bold;
+            cursor: pointer;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 600px;
+            border-radius: 5px;
+            background: #f4f4f4;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background: #e0e0e0;
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 15px;
+            margin: 0 auto;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            border-top: none;
+            background: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 
     <script>
         async function submitForm(event) {
@@ -44,6 +128,14 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('prediction-form').addEventListener('submit', submitForm);
+
+            const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+            collapsibleHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                });
+            });
         });
     </script>
 </head>
@@ -57,5 +149,54 @@
     <div id="prediction-result" style="display: none;">
         <p id="result-text"></p>
     </div>
+
+    <h2>MBTI Personality Types</h2>
+    <div class="collapsible-header">ISTJ - The Inspector (Introverted, Sensing, Thinking, Judging)</div>
+    <div class="collapsible-content">Logical, detail-oriented, responsible, and dependable. They value tradition and order.</div>
+
+    <div class="collapsible-header">ISFJ - The Protector (Introverted, Sensing, Feeling, Judging)</div>
+    <div class="collapsible-content">Warm, caring, practical, and highly organized. They enjoy helping others and maintaining harmony.</div>
+
+    <div class="collapsible-header">INFJ - The Advocate (Introverted, Intuitive, Feeling, Judging)</div>
+    <div class="collapsible-content">Visionary, empathetic, and insightful. They are driven by their deep values and purpose.</div>
+
+    <div class="collapsible-header">INTJ - The Architect (Introverted, Intuitive, Thinking, Judging)</div>
+    <div class="collapsible-content">Strategic, independent, and logical. They focus on long-term goals and innovation.</div>
+
+    <div class="collapsible-header">ISTP - The Virtuoso (Introverted, Sensing, Thinking, Perceiving)</div>
+    <div class="collapsible-content">Practical, adventurous, and analytical. They excel at problem-solving and hands-on activities.</div>
+
+    <div class="collapsible-header">ISFP - The Adventurer (Introverted, Sensing, Feeling, Perceiving)</div>
+    <div class="collapsible-content">Creative, flexible, and sensitive. They value beauty, art, and personal expression.</div>
+
+    <div class="collapsible-header">INFP - The Mediator (Introverted, Intuitive, Feeling, Perceiving)</div>
+    <div class="collapsible-content">Idealistic, empathetic, and imaginative. They strive for harmony and personal authenticity.</div>
+
+    <div class="collapsible-header">INTP - The Thinker (Introverted, Intuitive, Thinking, Perceiving)</div>
+    <div class="collapsible-content">Curious, intellectual, and logical. They enjoy exploring ideas and solving complex problems.</div>
+
+    <div class="collapsible-header">ESTP - The Entrepreneur (Extraverted, Sensing, Thinking, Perceiving)</div>
+    <div class="collapsible-content">Energetic, spontaneous, and action-oriented. They thrive in fast-paced environments.</div>
+
+    <div class="collapsible-header">ESFP - The Entertainer (Extraverted, Sensing, Feeling, Perceiving)</div>
+    <div class="collapsible-content">Fun-loving, enthusiastic, and sociable. They enjoy being the center of attention.</div>
+
+    <div class="collapsible-header">ENFP - The Campaigner (Extraverted, Intuitive, Feeling, Perceiving)</div>
+    <div class="collapsible-content">Creative, energetic, and inspiring. They are driven by possibilities and emotional connections.</div>
+
+    <div class="collapsible-header">ENTP - The Debater (Extraverted, Intuitive, Thinking, Perceiving)</div>
+    <div class="collapsible-content">Witty, inventive, and resourceful. They excel at brainstorming and challenging the status quo.</div>
+
+    <div class="collapsible-header">ESTJ - The Executive (Extraverted, Sensing, Thinking, Judging)</div>
+    <div class="collapsible-content">Organized, practical, and results-oriented. They are natural leaders who value structure.</div>
+
+    <div class="collapsible-header">ESFJ - The Consul (Extraverted, Sensing, Feeling, Judging)</div>
+    <div class="collapsible-content">Loyal, sociable, and caring. They are highly attentive to others’ needs and thrive in social settings.</div>
+
+    <div class="collapsible-header">ENFJ - The Protagonist (Extraverted, Intuitive, Feeling, Judging)</div>
+    <div class="collapsible-content">Charismatic, empathetic, and inspiring. They are natural leaders who motivate others.</div>
+
+    <div class="collapsible-header">ENTJ - The Commander (Extraverted, Intuitive, Thinking, Judging)</div>
+    <div class="collapsible-content">Strategic, confident, and determined. They excel at planning and achieving ambitious goals.</div>
 </body>
 </html>
