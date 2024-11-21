@@ -1,15 +1,16 @@
 import pickle
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.svm import SVC  # Import Support Vector Classifier (SVM)
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+from scipy.stats import uniform
+import time
 
-# Step 1: Load your dataset (replace with your dataset)
-# For this example, assuming you have a CSV file with 'type' as labels and 'posts' as features.
-df = pd.read_csv("C:\\Users\\LENOVO\\Desktop\\mbti_1.csv"")
+# Step 1: Load your dataset
+df = pd.read_csv("C:\\Users\\LENOVO\\Desktop\\mbti_1.csv")
 
 # Step 2: Preprocess your data
 X = df['posts']  # Features (social media posts)
@@ -23,33 +24,63 @@ vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
 X_train_tfidf = vectorizer.fit_transform(X_train)
 X_test_tfidf = vectorizer.transform(X_test)
 
-# Step 5: Train a model (SVM instead of Random Forest)
-model = SVC(kernel='linear', random_state=42)  # Use linear kernel for SVM
-model.fit(X_train_tfidf, y_train)
+# Step 5: Hyperparameter Tuning with GridSearchCV
+param_grid = {
+    'C': [1, 10],
+    'gamma': ['scale', 'auto'],
+    'kernel': ['linear']
+}
 
-# Step 6: Evaluate the model
-y_pred = model.predict(X_test_tfidf)
-accuracy = accuracy_score(y_test, y_pred)
-print(f'Model Accuracy: {accuracy*100:.2f}%')
+print("\nPerforming GridSearchCV...")
+start_time = time.time()
+grid_search = GridSearchCV(SVC(random_state=42), param_grid, cv=3, verbose=1, n_jobs=-1)
+grid_search.fit(X_train_tfidf, y_train)
+print(f"GridSearchCV Time: {time.time() - start_time:.2f} seconds")
+best_grid_model = grid_search.best_estimator_
 
-# Confusion Matrix
-conf_matrix = confusion_matrix(y_test, y_pred, labels=model.classes_)
-print("Confusion Matrix:")
-print(conf_matrix)
+# Evaluate Grid Search Model
+y_pred_grid = best_grid_model.predict(X_test_tfidf)
+grid_accuracy = accuracy_score(y_test, y_pred_grid)
+print(f"GridSearchCV Model Accuracy: {grid_accuracy*100:.2f}%\n")
 
-# Plot the Confusion Matrix
-plt.figure(figsize=(10, 8))
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=model.classes_, yticklabels=model.classes_)
-plt.title('Confusion Matrix')
-plt.xlabel('Predicted Labels')
-plt.ylabel('True Labels')
-plt.show()
+# Step 6: Hyperparameter Tuning with RandomizedSearchCV
+param_dist = {
+    'C': uniform(0.1, 10),
+    'gamma': ['scale', 'auto'],
+    'kernel': ['linear']
+}
 
-# Step 7: Save the trained model and vectorizer using pickle
-with open('model.pkl', 'wb') as model_file:
-    pickle.dump(model, model_file)
+print("Performing RandomizedSearchCV...")
+start_time = time.time()
+random_search = RandomizedSearchCV(SVC(random_state=42), param_dist, n_iter=10, cv=3, verbose=1, n_jobs=-1, random_state=42)
+random_search.fit(X_train_tfidf, y_train)
+print(f"RandomizedSearchCV Time: {time.time() - start_time:.2f} seconds")
+best_random_model = random_search.best_estimator_
 
-with open('vectorizer.pkl', 'wb') as vectorizer_file:
-    pickle.dump(vectorizer, vectorizer_file)
+# Evaluate Random Search Model
+y_pred_random = best_random_model.predict(X_test_tfidf)
+random_accuracy = accuracy_score(y_test, y_pred_random)
+print(f"RandomizedSearchCV Model Accuracy: {random_accuracy*100:.2f}%\n")
 
-print("Model and vectorizer saved as model.pkl and vectorizer.pkl")
+# Step 7: Confusion Matrix for Best Models
+def plot_confusion_matrix(y_test, y_pred, model_name):
+    conf_matrix = confusion_matrix(y_test, y_pred, labels=best_grid_model.classes_)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=best_grid_model.classes_, yticklabels=best_grid_model.classes_)
+    plt.title(f'{model_name} Confusion Matrix')
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
+    plt.show()
+
+plot_confusion_matrix(y_test, y_pred_grid, "GridSearchCV")
+plot_confusion_matrix(y_test, y_pred_random, "RandomizedSearchCV")
+
+# Step 8: Save Models and Vectorizer
+with open('best_grid_model.pkl', 'wb') as file:
+    pickle.dump(best_grid_model, file)
+with open('best_random_model.pkl', 'wb') as file:
+    pickle.dump(best_random_model, file)
+with open('vectorizer.pkl', 'wb') as file:
+    pickle.dump(vectorizer, file)
+
+print("Models and vectorizer have been saved successfully!")
